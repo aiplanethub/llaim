@@ -56,7 +56,7 @@ def get_component_class(component_name: str, class_name: str):
 
 # Creating indexes provided by user
 def create_indexes(stack, stack_id: int, session_id: int) -> dict:
-    components = [StackComponentType.VECTOR_DB, StackComponentType.MEMORY]
+    components = [StackComponentType.VECTOR_DB, StackComponentType.MEMORY, StackComponentType.CACHE]
 
     meta_data = {}
     for component in components:
@@ -84,6 +84,7 @@ def get_current_stack(config: dict, session=None, default_session: bool = True):
             if (
                 component_name == StackComponentType.VECTOR_DB.value
                 or component_name == StackComponentType.MEMORY.value
+                or component_name == StackComponentType.CACHE.value
             ):
                 configurations["index_name"] = session.meta_data[component_name]["index_name"]
 

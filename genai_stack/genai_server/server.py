@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from genai_stack import __version__
 from genai_stack.genai_server.routers import (
+    cache_routes,
     session_routes,
     retriever_routes,
     vectordb_routes,
@@ -27,6 +28,7 @@ def get_genai_server_app():
     app.include_router(retriever_routes.router)
     app.include_router(vectordb_routes.router)
     app.include_router(etl_routes.router)
+    app.include_router(cache_routes.router)
     app.include_router(model_routes.router)
 
     return app
