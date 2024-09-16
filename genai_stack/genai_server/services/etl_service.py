@@ -20,7 +20,7 @@ class ETLService(BaseService):
 
             data = ETLUtil(data).save_request(etl_job.id)
 
-            stack = get_current_stack(config=stack_config, session=stack_session)
+            stack = get_current_stack(config=stack_config, engine=session, session=stack_session)
             get_etl_platform(stack=stack).handle_job(**data)
 
             etl_job.data = data

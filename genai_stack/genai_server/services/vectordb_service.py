@@ -18,7 +18,7 @@ class VectorDBService(BaseService):
             stack_session = session.get(StackSessionSchema, data.session_id)
             if stack_session is None:
                 raise HTTPException(status_code=404, detail=f"Session {data.session_id} not found")
-            stack = get_current_stack(config=stack_config, session=stack_session)
+            stack = get_current_stack(config=stack_config, engine=session, session=stack_session)
             stack.vectordb.add_documents(data.documents)
             return RetrieverAddDocumentsResponseModel(
                 documents=[
@@ -34,7 +34,7 @@ class VectorDBService(BaseService):
 
         with Session(self.engine) as session:
             stack_session = session.get(StackSessionSchema, data.session_id)
-            stack = get_current_stack(config=stack_config, session=stack_session)
+            stack = get_current_stack(config=stack_config, engine=session, session=stack_session)
             if stack_session is None:
                 raise HTTPException(status_code=404, detail=f"Session {data.session_id} not found")
             documents = stack.vectordb.search(data.query)

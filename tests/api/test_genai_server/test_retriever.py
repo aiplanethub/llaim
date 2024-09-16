@@ -14,7 +14,7 @@ class TestRetrieverServerAPIs(unittest.TestCase):
     def test_retrieve(self):
         response = requests.get(
             url=self.base_url + "/retrieve",
-            params={"session_id": 1, "query": "Where is sunil from ?"},
+            params={"session_id": 2, "query": "Where is sunil from ?"},
         )
         assert response.status_code == 200
         assert response.json()

@@ -24,7 +24,7 @@ class SessionService(BaseService):
                 created_at : datetime
                 modified_at : None
         """
-        stack = get_current_stack(stack_config, default_session=False)
+        stack = get_current_stack(config=stack_config, default_session=False)
 
         with Session(self.engine) as session:
             stack_session = StackSessionSchema(stack_id=1, meta_data={})

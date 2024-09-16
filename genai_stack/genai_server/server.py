@@ -6,6 +6,7 @@ from genai_stack.genai_server.routers import (
     retriever_routes,
     vectordb_routes,
     etl_routes,
+    prompt_engine_routes,
     model_routes,
 )
 
@@ -27,6 +28,7 @@ def get_genai_server_app():
     app.include_router(retriever_routes.router)
     app.include_router(vectordb_routes.router)
     app.include_router(etl_routes.router)
+    app.include_router(prompt_engine_routes.router)
     app.include_router(model_routes.router)
 
     return app

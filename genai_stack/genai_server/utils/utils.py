@@ -1,6 +1,10 @@
 import string
 import random
 
+from langchain.prompts import PromptTemplate
+
+from genai_stack.genai_server.schemas import PromptSchema
+from genai_stack.prompt_engine.utils import PromptTypeEnum
 from genai_stack.utils import import_class
 from genai_stack.enums import StackComponentType
 from genai_stack.genai_server.models.session_models import StackSessionResponseModel
@@ -68,7 +72,56 @@ def create_indexes(stack, stack_id: int, session_id: int) -> dict:
     return meta_data
 
 
-def get_current_stack(config: dict, session=None, default_session: bool = True):
+def get_prompt_from_db(session, session_id, stack_config):
+    prompt_sessions = (
+        session.query(PromptSchema)
+        .filter_by(stack_session=session_id)
+    )
+    prompt_type_map = {
+        PromptTypeEnum.SIMPLE_CHAT_PROMPT.value: {
+            "field": "simple_chat_prompt_template",
+            "input_variables": ["history", "query"]
+        },
+        PromptTypeEnum.CONTEXTUAL_CHAT_PROMPT.value: {
+            "field": "contextual_chat_prompt_template",
+            "input_variables": ["context", "history", "query"]
+        },
+        PromptTypeEnum.CONTEXTUAL_QA_PROMPT.value: {
+            "field": "contextual_qa_prompt_template",
+            "input_variables": ["context", "query"]
+        }
+    }
+    for prompt_session in prompt_sessions:
+        if "prompt_engine" not in stack_config["components"]:
+            stack_config["components"]["prompt_engine"] = {
+                "name": "PromptEngine",
+                "config": {}
+            }
+        if "config" not in stack_config["components"]["prompt_engine"]:
+            stack_config["components"]["prompt_engine"]["config"] = {}
+        stack_config["components"]["prompt_engine"]["config"] = {
+            **stack_config["components"]["prompt_engine"]["config"],
+            prompt_type_map[prompt_session.type.value]["field"]: PromptTemplate(
+                template=prompt_session.template,
+                input_variables=prompt_type_map[prompt_session.type.value]["input_variables"]
+            )
+        }
+    return stack_config
+
+
+def get_current_stack(
+    config: dict,
+    engine=None,
+    session=None,
+    default_session: bool = True,
+    overide_config: dict = None
+):
+    if engine is not None:
+        config = get_prompt_from_db(
+            session=engine,
+            session_id=session.id,
+            stack_config=config
+        )
     components = {}
     if session is None and default_session:
         from genai_stack.genai_server.settings.settings import settings
@@ -86,7 +139,9 @@ def get_current_stack(config: dict, session=None, default_session: bool = True):
                 or component_name == StackComponentType.MEMORY.value
             ):
                 configurations["index_name"] = session.meta_data[component_name]["index_name"]
-
+        if overide_config:
+            if component_name in overide_config:
+                configurations.update(overide_config[component_name])
         components[component_name] = cls.from_kwargs(**configurations)
     # To avoid circular import error
     from genai_stack.stack.stack import Stack
