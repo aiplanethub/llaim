@@ -2,14 +2,16 @@
 
 """Tests for `genai_server`."""
 
-import unittest
 import requests
 
+from tests.api.test_genai_server import TestCaseServer
 
-class TestRetrieverServerAPIs(unittest.TestCase):
+
+class TestRetrieverServerAPIs(TestCaseServer):
 
     def setUp(self) -> None:
-        self.base_url = "http://127.0.0.1:5000/api/retriever"
+        super().setUp()
+        self.base_url = self.base_url + "retriever"
 
     def test_retrieve(self):
         response = requests.get(

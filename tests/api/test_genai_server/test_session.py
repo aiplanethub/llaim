@@ -2,18 +2,19 @@
 
 """Tests for `genai_server`."""
 
-import unittest
 import requests
 
+from tests.api.test_genai_server import TestCaseServer
 
-class TestSessionServerAPIs(unittest.TestCase):
+
+class TestSessionServerAPIs(TestCaseServer):
 
     def setUp(self) -> None:
-        self.base_url = "http://127.0.0.1:5000/api/session"
+        super().setUp()
+        self.base_url = self.base_url + "session"
 
     def test_create_session(self):
         response = requests.post(url=self.base_url)
-        print(response.json())
         assert response.status_code == 200
 
     def test_sessions_list(self):

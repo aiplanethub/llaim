@@ -2,14 +2,16 @@
 
 """Tests for `genai_server`."""
 import json
-import unittest
 import requests
 
+from tests.api.test_genai_server import TestCaseServer
 
-class TestVectorDBServerAPIs(unittest.TestCase):
+
+class TestVectorDBServerAPIs(TestCaseServer):
 
     def setUp(self) -> None:
-        self.base_url = "http://127.0.0.1:5000/api/vectordb"
+        super().setUp()
+        self.base_url = self.base_url + "vectordb"
 
     def test_add_document(self):
         response = requests.post(

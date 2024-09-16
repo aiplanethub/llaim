@@ -2,14 +2,16 @@
 
 """Tests for `genai_server`."""
 
-import unittest
 import requests
 
+from tests.api.test_genai_server import TestCaseServer
 
-class TestETLServerAPIs(unittest.TestCase):
+
+class TestETLServerAPIs(TestCaseServer):
 
     def setUp(self) -> None:
-        self.base_url = "http://127.0.0.1:8080/api/etl"
+        super().setUp()
+        self.base_url = self.base_url + "etl"
 
     def test_submit_job(self):
         response = requests.get(

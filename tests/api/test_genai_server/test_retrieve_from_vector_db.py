@@ -2,15 +2,15 @@
 
 """Tests for `genai_server`."""
 import json
-import unittest
 import requests
 
+from tests.api.test_genai_server import TestCaseServer
 
-class TestRetrieverDataFromDBAPIs(unittest.TestCase):
+
+class TestRetrieverDataFromDBAPIs(TestCaseServer):
 
     def setUp(self) -> None:
-        self.base_url = "http://127.0.0.1:5000/api"
-
+        super().setUp()
         self.data = [
             {
                 "id": self.create_session(),
@@ -42,7 +42,7 @@ class TestRetrieverDataFromDBAPIs(unittest.TestCase):
         ]
 
     def create_session(self):
-        response = requests.post(url=self.base_url + "/session")
+        response = requests.post(url=self.base_url + "session")
         assert response.status_code == 200
         assert response.json()
         data = response.json()
@@ -51,7 +51,7 @@ class TestRetrieverDataFromDBAPIs(unittest.TestCase):
 
     def add_document_to_session(self, session_id, data):
         response = requests.post(
-            url=self.base_url + "/vectordb/add-documents",
+            url=self.base_url + "vectordb/add-documents",
             data=json.dumps(
                 {
                     "session_id": session_id,
@@ -63,7 +63,7 @@ class TestRetrieverDataFromDBAPIs(unittest.TestCase):
 
     def search_for_doc(self, session_id, query):
         response = requests.get(
-            url=self.base_url + "/retriever/retrieve",
+            url=self.base_url + "retriever/retrieve",
             params={"session_id": session_id, "query": query},
         )
         assert response.status_code == 200

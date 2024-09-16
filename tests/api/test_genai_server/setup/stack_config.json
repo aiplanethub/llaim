@@ -1,0 +1,46 @@
+{
+    "components":{
+        "vectordb":{
+            "name":"chromadb",
+            "config":{
+            }
+        },
+        "memory":{
+            "name":"langchain",
+            "config":{
+
+            }
+        },
+        "llm_cache":{
+            "name":"cache",
+            "config":{
+
+            }
+        },
+        "model":{
+            "name":"gpt3.5",
+            "config":{
+                "parameters":{"openai_api_key": "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"}
+            }
+        },
+        "embedding":{
+            "name":"langchain",
+            "config":{
+                "name":"HuggingFaceEmbeddings",
+                "fields":{
+                    "model_name": "sentence-transformers/all-mpnet-base-v2",
+                    "model_kwargs": {"device": "cpu"},
+                    "encode_kwargs": {"normalize_embeddings": false}
+                }
+            }
+        },
+        "prompt_engine":{
+            "name": "engine",
+            "config": {}
+        },
+        "retriever": {
+            "name": "langchain",
+            "config": {}
+        }
+    }
+}
