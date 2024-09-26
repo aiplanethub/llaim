@@ -10,7 +10,7 @@ class HuggingFaceModelConfigModel(BaseModelConfigModel):
     Data Model for the configs
     """
 
-    model: Optional[str] = "nomic-ai/gpt4all-j"
+    model: Optional[str] = "google/flan-t5-large"
     """Model name to use."""
     model_kwargs: Optional[Dict] = None
     """Key word arguments passed to the model."""
