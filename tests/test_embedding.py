@@ -16,4 +16,5 @@ class TestEmbedding(unittest.TestCase):
             "encode_kwargs": {"normalize_embeddings": False},
         }
         embedding = LangchainEmbedding.from_kwargs(name="HuggingFaceEmbeddings", fields=config)
+        embedding.load()
         embedding.embed_text("something")
